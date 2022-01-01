@@ -1,9 +1,17 @@
 from django.shortcuts import render
 from django.views import generic
-from .models import UserProfile
+from .models import UserProfile, Account
 from rest_framework import generics, status, mixins
-from .serializers import UserProfileSerializer
+from .serializers import UserProfileSerializer, AccountCreaterSerializer
 # Create your views here.
+
+
+class SignUp(mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Account.objects.all()
+    serializer_class = AccountCreaterSerializer
+
+    def post(self, request):
+        return self.create(request)
 
 class UserList(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
@@ -15,3 +23,4 @@ class UserDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
 
     def get(self, request, pk):
         return self.retrieve(request, pk)
+
