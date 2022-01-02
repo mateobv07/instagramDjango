@@ -3,6 +3,7 @@ from django.views import generic
 from .models import UserProfile, Account
 from rest_framework import generics, status, mixins
 from .serializers import UserProfileSerializer, AccountCreaterSerializer
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 
@@ -20,6 +21,7 @@ class UserList(generics.ListCreateAPIView):
 class UserDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    permission_class = (IsAuthenticated,)
 
     def get(self, request, pk):
         return self.retrieve(request, pk)

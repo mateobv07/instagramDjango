@@ -4,6 +4,7 @@ from accounts.models import Account
 class Post(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     description = models.TextField(blank=True, max_length=200)
+    image = models.ImageField(upload_to='photos/posts',default=None)
     likes = models.IntegerField(default=0)
     location = models.CharField(max_length=80)
     tags = models.ForeignKey(Account, related_name="tagged", on_delete=models.CASCADE)
