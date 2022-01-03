@@ -70,8 +70,8 @@ class Account(AbstractBaseUser):
 class UserProfile(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
     Description = models.TextField(blank=True)
-    profile_picture = models.ImageField(blank=True, upload_to='userprofile/')
-    following = models.ForeignKey(Account, blank=True, related_name='followed',on_delete=models.CASCADE)
+    profile_picture = models.ImageField(blank=True, null=True, upload_to='userprofile/')
+    following = models.ForeignKey(Account, blank=True, null=True, related_name='followed',on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.username
@@ -80,3 +80,8 @@ class UserProfile(models.Model):
 def createAuthToken(sender, instance, created, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+@receiver(post_save, sender=Account)
+def createUserProfile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)

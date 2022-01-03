@@ -5,7 +5,6 @@ from comments.models import Comment
 from accounts.serializers import AccountSerializer
 
 class PostSerializer(serializers.ModelSerializer):
-    user = AccountSerializer(read_only=True)
     comments = serializers.SerializerMethodField('comment_count')
     def comment_count(self, thispost):
         com = Comment.objects.filter(post=thispost)

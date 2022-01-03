@@ -4,6 +4,9 @@ from .models import UserProfile, Account
 from rest_framework import generics, status, mixins
 from .serializers import UserProfileSerializer, AccountCreaterSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 # Create your views here.
 
 
@@ -18,11 +21,16 @@ class UserList(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-class UserDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    permission_class = (IsAuthenticated,)
+class UserDetail(APIView):
+    def get(self, request, username):
+        user = UserProfile.objects.get(user__username=username)
+        serializer = UserProfileSerializer(user, many=False)
+        return Response(serializer.data)
 
-    def get(self, request, pk):
-        return self.retrieve(request, pk)
+class myProfile(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = UserProfile.objects.get(user=request.user)
+        serializer = UserProfileSerializer(user, many=False)
+        return Response(serializer.data)
 
