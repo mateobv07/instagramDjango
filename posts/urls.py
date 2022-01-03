@@ -3,6 +3,6 @@ from django.urls import path, include
 from posts import views
 
 urlpatterns = [
-    #path('signup/', views.SignUp.as_view()),
+    path('myPosts/', views.profilePosts.as_view()),
 
 ]

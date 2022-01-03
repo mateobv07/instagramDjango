@@ -6,6 +6,6 @@ class Post(models.Model):
     description = models.TextField(blank=True, max_length=200)
     image = models.ImageField(upload_to='photos/posts',default=None)
     likes = models.IntegerField(default=0)
-    location = models.CharField(max_length=80)
-    tags = models.ForeignKey(Account, related_name="tagged", on_delete=models.CASCADE)
+    location = models.CharField(max_length=80,blank=True, null=True)
+    tags = models.ForeignKey(Account, blank=True, null=True, related_name="tagged", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
