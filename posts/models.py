@@ -9,3 +9,10 @@ class Post(models.Model):
     location = models.CharField(max_length=80,blank=True, null=True)
     tags = models.ForeignKey(Account, blank=True, null=True, related_name="tagged", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.description
+        
+class Saved(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)

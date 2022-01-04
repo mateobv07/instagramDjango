@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.views import APIView
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Saved
+from .serializers import PostSerializer, SavedSerializer
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
@@ -17,3 +17,10 @@ class profilePosts(APIView):
         
         return Response(serializer.data)
 
+class ProfileSaved(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        saved = Saved.objects.filter(user__id=request.user.id)
+        serializer = SavedSerializer(saved, many=True)
+
+        return Response(serializer.data)
