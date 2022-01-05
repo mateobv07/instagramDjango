@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, User
 from django.db.models.fields import EmailField
 #Automaticaly create a token when user is created
 from django.db.models.signals import post_save
@@ -43,7 +43,8 @@ class Account(AbstractBaseUser):
     real_name = models.CharField(max_length=100, default=DEFAULT)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
-
+    Description = models.TextField(blank=True)
+    profile_picture = models.ImageField(blank=True, null=True, upload_to='userprofile/')
     # required
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
@@ -67,21 +68,21 @@ class Account(AbstractBaseUser):
         return True
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(Account, on_delete=models.CASCADE)
-    Description = models.TextField(blank=True)
-    profile_picture = models.ImageField(blank=True, null=True, upload_to='userprofile/')
-    following = models.ForeignKey(Account, blank=True, null=True, related_name='followed',on_delete=models.CASCADE)
+class UserFollowing(models.Model):
+    user = models.ForeignKey(Account, related_name='following', on_delete=models.CASCADE)
+    following_user = models.ForeignKey(Account, related_name='followers', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user','following_user'],  name="unique_followers")
+        ]
+        ordering = ["-created"]
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user_id} follows {self.following_user}"
 
 @receiver(post_save, sender=Account)
 def createAuthToken(sender, instance, created, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
-@receiver(post_save, sender=Account)
-def createUserProfile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
