@@ -2,7 +2,7 @@ from django.db import models
 from accounts.models import Account
 # Create your models here.
 class Post(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='posts')
     description = models.TextField(blank=True, max_length=200)
     image = models.ImageField(upload_to='photos/posts',default=None)
     likes = models.IntegerField(default=0)

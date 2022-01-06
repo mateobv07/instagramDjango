@@ -19,6 +19,7 @@ class SignUp(mixins.CreateModelMixin, generics.GenericAPIView):
 
 
 class UserDetail(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, username):
         user = Account.objects.get(username=username)
         serializer = AccountSerializer(user, many=False)
