@@ -30,3 +30,8 @@ class FollowersSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFollowing
         fields = ("id", "user", "created")
+
+class UsernameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ('username',)

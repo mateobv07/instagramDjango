@@ -80,7 +80,7 @@ class UserFollowing(models.Model):
         ordering = ["-created"]
 
     def __str__(self):
-        return f"{self.user_id} follows {self.following_user}"
+        return f"{self.user} follows {self.following_user}"
 
 @receiver(post_save, sender=Account)
 def createAuthToken(sender, instance, created, **kwargs):

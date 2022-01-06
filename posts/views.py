@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.views import APIView
 from .models import Post, Saved
-from .serializers import PostSerializer, SavedSerializer
+from .serializers import PostSerializer, SavedSerializer, TagSerializer
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
@@ -24,3 +24,9 @@ class ProfileSaved(APIView):
         serializer = SavedSerializer(saved, many=True)
 
         return Response(serializer.data)
+
+#Same as above profileSaved, one liner
+class ProfileTagged(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        return Response(TagSerializer(request.user.tags.all(), many=True).data)

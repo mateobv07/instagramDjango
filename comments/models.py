@@ -4,6 +4,6 @@ from posts.models import Post
 # Create your models here.
 class Comment(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
     comment = models.TextField(max_length=80)
