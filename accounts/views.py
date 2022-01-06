@@ -27,6 +27,7 @@ class UserDetail(APIView):
 
 class myProfile(APIView):
     permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         user = Account.objects.get(id=request.user.id)
         serializer = AccountSerializer(user, many=False)
